@@ -76,6 +76,13 @@ function regex() {
   return $regex;
 }
 
+/**
+ * Category を trim
+ *
+ * @param  string $category
+ * @return string
+ */
+
 function trim_category($category) {
   return preg_replace('/\s/', '', $category);
 }
@@ -97,6 +104,10 @@ function view($data) {
 _HTML_;
   }
 }
+
+/*
+ * 各ページから API を取得して出力
+ */
 
 for ($page = 1; $page <= MAX_PAGE; $page++) {
   if ($data = data($page)) {
