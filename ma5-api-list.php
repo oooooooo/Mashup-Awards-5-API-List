@@ -88,6 +88,27 @@ function getRegex() {
   return $regex;
 }
 
+function html_footer() {
+  return <<<_HTML_
+  </body>
+</html>
+
+_HTML_;
+}
+
+function html_header() {
+  return <<<_HTML_
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="common.css" rel="stylesheet" type="text/css" />
+    <title>Mashup Awards 5 API List</title>
+  </head>
+  <body>
+_HTML_;
+}
+
 /**
  * View
  *
@@ -97,19 +118,24 @@ function getRegex() {
 
 function view($data) {
   ob_start();
+  print html_header();
+
   foreach ($data as $page=>$match_list) {
     foreach ($match_list as $match) {
-      $category = filterCategory($match['category']);
       print <<<_HTML_
-{$match['title']}<br>
-{$category}<br>
-{$match['guide']}
-<hr>
+<h3>{$match['title']}</h3>
+<span class="category">{$match['category']}</span>
+<p>{$match['guide']}</p>
+
 _HTML_;
     }
     ob_flush();
     flush();
   }
+
+  print html_footer();
+  ob_flush();
+  flush();
 }
 
 /*
