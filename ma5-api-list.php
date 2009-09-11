@@ -1,7 +1,24 @@
-<?php
+<?php // -*- encoding: utf-8 -*-
+/**
+ * Mashup Awards 5 API List
+ *
+ * API リストを一覧にする
+ *
+ *
+ * @since      2009-09-11
+ * @author     oooooooo
+ */
+
 define('MAX_PAGE', 100);
 
 error_reporting(E_ALL);
+
+/**
+ * MA5 API List からデータを取得
+ *
+ * @param  int   $page
+ * @return array
+ */
 
 function data($page) {
   $file = f("http://mashupaward.jp/category/3176/$page/");
@@ -23,6 +40,13 @@ function data($page) {
   return $data;
 }
 
+/**
+ * 粘り強い file_get_contents()
+ *
+ * @param  string $url
+ * @return string
+ */
+
 function f($url) {
   for ($i = 0; $i < 3; $i++) {
     $file = file_get_contents($url);
@@ -32,6 +56,12 @@ function f($url) {
   }
   return false;
 }
+
+/**
+ * MA5 API List を解析する正規表現
+ *
+ * @return string
+ */
 
 function regex() {
   $open     = '<div class="entry_list_wrap">.+?<p class="thumb">.+?</p>';
@@ -48,6 +78,13 @@ function regex() {
 function trim_category($category) {
   return preg_replace('/\s/', '', $category);
 }
+
+/**
+ * View
+ *
+ * @param  array  $data
+ * @return string
+ */
 
 function view($data) {
   foreach ($data as $match) {
