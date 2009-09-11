@@ -74,6 +74,19 @@ function filterCategory($category) {
 }
 
 /**
+ * バッファ出力
+ *
+ * @return void
+ */
+
+function flushBuffers(){
+  ob_end_flush();
+  ob_flush();
+  flush();
+  ob_start();
+}
+
+/**
  * MA5 API List を解析する正規表現
  *
  * @return string
@@ -120,8 +133,8 @@ _HTML_;
  */
 
 function view($data) {
-  ob_start();
   print html_header();
+  flushBuffers();
 
   foreach ($data as $page=>$match_list) {
     foreach ($match_list as $match) {
@@ -132,14 +145,12 @@ function view($data) {
 <div class="line"><hr /></div>
 
 _HTML_;
+      flushBuffers();
     }
-    ob_flush();
-    flush();
   }
 
   print html_footer();
-  ob_flush();
-  flush();
+  flushBuffers();
 }
 
 /*
