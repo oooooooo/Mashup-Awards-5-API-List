@@ -3,7 +3,7 @@
  * Mashup Awards 5 API List
  *
  * API リストを一覧にする
- *
+ * http://mashupaward.jp/
  *
  * @since      2009-09-11
  * @author     oooooooo
@@ -12,6 +12,7 @@
 define('MAX_PAGE', 100);
 
 error_reporting(E_ALL);
+set_time_limit(0);
 
 /**
  * MA5 API List からデータを取得
