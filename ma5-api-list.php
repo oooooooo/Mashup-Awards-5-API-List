@@ -39,8 +39,8 @@ function f($url) {
  */
 
 function flushBuffers(){
-  ob_end_flush();
-  ob_flush();
+  @ob_end_flush();
+  @ob_flush();
   flush();
   ob_start();
 }
@@ -119,6 +119,8 @@ _HTML_;
 
 function printFooter() {
   print <<<_HTML_
+    <p>done.</p>
+
   </body>
 </html>
 
@@ -142,6 +144,8 @@ function printHeader() {
     <title>Mashup Awards 5 API List</title>
   </head>
   <body>
+    <h1>Mashup Awards 5 API List</h1>
+    <h2>ページ送りが面倒なあなたに</h2>
 _HTML_;
   flushBuffers();
 }
@@ -149,8 +153,6 @@ _HTML_;
 /*
  * 各ページから API を取得して出力
  */
-
-ob_start();
 
 printHeader();
 
