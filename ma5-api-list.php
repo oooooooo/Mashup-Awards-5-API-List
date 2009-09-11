@@ -15,31 +15,6 @@ error_reporting(E_ALL);
 set_time_limit(0);
 
 /**
- * MA5 API List からデータを取得
- *
- * @param  int   $page
- * @return array
- */
-
-function data($page) {
-  $data = array();
-  $regex = getRegex();
-
-  $file = f("http://mashupaward.jp/category/3176/$page/");
-  if (preg_match_all("|$regex|ms", $file, $match_all, PREG_SET_ORDER)) {
-    foreach ($match_all as $match) {
-      $data[] = array(
-        'title'    => $match['title'],
-        'category' => $match['category'],
-        'guide'    => $match['guide'],
-        );
-    }
-  }
-
-  return $data;
-}
-
-/**
  * 粘り強い file_get_contents()
  * - 取得に失敗しても 3 回試す
  *
@@ -68,6 +43,34 @@ function flushBuffers(){
   ob_flush();
   flush();
   ob_start();
+}
+
+/**
+ * MA5 API List からデータを取得
+ *
+ * @param  int   $page
+ * @return array
+ */
+
+function getData($page) {
+  $data = array();
+  $regex = getRegex();
+
+  $file = f("http://mashupaward.jp/category/3176/$page/");
+  if (preg_match_all("|$regex|ms", $file, $match_all, PREG_SET_ORDER)) {
+    foreach ($match_all as $match) {
+      $data[] = array(
+        'title'    => $match['title'],
+        'category' => $match['category'],
+        'guide'    => $match['guide'],
+        );
+    }
+  }
+  else {
+    return false;
+  }
+
+  return $data;
 }
 
 /**
@@ -152,8 +155,12 @@ ob_start();
 printHeader();
 
 for ($page = 1; $page <= MAX_PAGE; $page++) {
-  $data = data($page);
-  printBody($data);
+  if ($data = getData($page)) {
+    printBody($data);
+  }
+  else {
+    break;
+  }
 }
 
 printFooter();
