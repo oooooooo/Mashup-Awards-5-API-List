@@ -49,7 +49,7 @@ function data($page) {
 
 function f($url) {
   for ($i = 0; $i < 3; $i++) {
-    $file = file_get_contents($url);
+    $file = @file_get_contents($url);
     if ($file) {
       return $file;
     }
