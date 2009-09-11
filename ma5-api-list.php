@@ -135,16 +135,17 @@ _HTML_;
  */
 
 function printHeader() {
+  $title = 'Mashup Awards 5 API List';
   print <<<_HTML_
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="common.css" rel="stylesheet" type="text/css" />
-    <title>Mashup Awards 5 API List</title>
+    <title>$title</title>
   </head>
   <body>
-    <h1>Mashup Awards 5 API List</h1>
+    <h1>$title</h1>
     <h2>ページ送りが面倒なあなたに</h2>
 _HTML_;
   flushBuffers();
