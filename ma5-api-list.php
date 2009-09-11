@@ -29,7 +29,7 @@ function data($page) {
     foreach ($match_all as $match) {
       $data[] = array(
         'title'    => $match['title'],
-        'category' => filterCategory($match['category']),
+        'category' => $match['category'],
         'guide'    => $match['guide'],
         );
     }
@@ -97,9 +97,10 @@ function getRegex() {
 
 function view($data) {
   foreach ($data as $match) {
+    $category = filterCategory($match['category']);
     print <<<_HTML_
 {$match['title']}<br>
-{$match['category']}<br>
+{$category}<br>
 {$match['guide']}
 <hr>
 _HTML_;
