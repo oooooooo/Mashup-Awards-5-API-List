@@ -21,21 +21,21 @@ set_time_limit(0);
  * @return array
  */
 
-function data($page) {
-  $file = f("http://mashupaward.jp/category/3176/$page/");
+function data() {
   $data = array();
   $regex = getRegex();
-  if (preg_match_all("|$regex|ms", $file, $match_all, PREG_SET_ORDER)) {
-    foreach ($match_all as $match) {
-      $data[] = array(
-        'title'    => $match['title'],
-        'category' => $match['category'],
-        'guide'    => $match['guide'],
-        );
+
+  for ($page = 1; $page <= MAX_PAGE; $page++) {
+    $file = f("http://mashupaward.jp/category/3176/$page/");
+    if (preg_match_all("|$regex|ms", $file, $match_all, PREG_SET_ORDER)) {
+      foreach ($match_all as $match) {
+        $data[$page][] = array(
+          'title'    => $match['title'],
+          'category' => $match['category'],
+          'guide'    => $match['guide'],
+          );
+      }
     }
-  }
-  else {
-    return false;
   }
 
   return $data;
@@ -96,14 +96,19 @@ function getRegex() {
  */
 
 function view($data) {
-  foreach ($data as $match) {
-    $category = filterCategory($match['category']);
-    print <<<_HTML_
+  ob_start();
+  foreach ($data as $page=>$match_list) {
+    foreach ($match_list as $match) {
+      $category = filterCategory($match['category']);
+      print <<<_HTML_
 {$match['title']}<br>
 {$category}<br>
 {$match['guide']}
 <hr>
 _HTML_;
+    }
+    ob_flush();
+    flush();
   }
 }
 
@@ -111,14 +116,5 @@ _HTML_;
  * 各ページから API を取得して出力
  */
 
-ob_start();
-for ($page = 1; $page <= MAX_PAGE; $page++) {
-  if ($data = data($page)) {
-    view($data);
-    ob_flush();
-    flush();
-  }
-  else {
-    break;
-  }
-}
+$data = data();
+view($data);
