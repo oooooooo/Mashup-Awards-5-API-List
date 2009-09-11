@@ -5,9 +5,6 @@
  * API リストを一覧にする
  * http://mashupaward.jp/
  *
- * KNOWN BUGS
- * - ob_* が効いてない＞＜
- *
  * @since  2009-09-11
  * @author oooooooo
  */
@@ -24,20 +21,18 @@ set_time_limit(0);
  * @return array
  */
 
-function data() {
+function data($page) {
   $data = array();
   $regex = getRegex();
 
-  for ($page = 1; $page <= MAX_PAGE; $page++) {
-    $file = f("http://mashupaward.jp/category/3176/$page/");
-    if (preg_match_all("|$regex|ms", $file, $match_all, PREG_SET_ORDER)) {
-      foreach ($match_all as $match) {
-        $data[$page][] = array(
-          'title'    => $match['title'],
-          'category' => $match['category'],
-          'guide'    => $match['guide'],
-          );
-      }
+  $file = f("http://mashupaward.jp/category/3176/$page/");
+  if (preg_match_all("|$regex|ms", $file, $match_all, PREG_SET_ORDER)) {
+    foreach ($match_all as $match) {
+      $data[] = array(
+        'title'    => $match['title'],
+        'category' => $match['category'],
+        'guide'    => $match['guide'],
+        );
     }
   }
 
@@ -60,17 +55,6 @@ function f($url) {
     }
   }
   return false;
-}
-
-/**
- * Category を trim
- *
- * @param  string $category
- * @return string
- */
-
-function filterCategory($category) {
-  return preg_replace('/\s/', '', $category);
 }
 
 /**
@@ -104,16 +88,49 @@ function getRegex() {
   return $regex;
 }
 
-function html_footer() {
-  return <<<_HTML_
+/**
+ * API 紹介
+ *
+ * @param  array  $data
+ * @return void
+ */
+
+function printBody($data) {
+  foreach ($data as $match) {
+    print <<<_HTML_
+<h3>{$match['title']}</h3>
+<span class="category">{$match['category']}</span>
+<p>{$match['guide']}</p>
+<div class="line"><hr /></div>
+
+_HTML_;
+    flushBuffers();
+  }
+}
+
+/**
+ * フッタ
+ *
+ * @return void
+ */
+
+function printFooter() {
+  print <<<_HTML_
   </body>
 </html>
 
 _HTML_;
+  flushBuffers();
 }
 
-function html_header() {
-  return <<<_HTML_
+/**
+ * ヘッダ
+ *
+ * @return void
+ */
+
+function printHeader() {
+  print <<<_HTML_
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
@@ -123,33 +140,6 @@ function html_header() {
   </head>
   <body>
 _HTML_;
-}
-
-/**
- * View
- *
- * @param  array  $data
- * @return string
- */
-
-function view($data) {
-  print html_header();
-  flushBuffers();
-
-  foreach ($data as $page=>$match_list) {
-    foreach ($match_list as $match) {
-      print <<<_HTML_
-<h3>{$match['title']}</h3>
-<span class="category">{$match['category']}</span>
-<p>{$match['guide']}</p>
-<div class="line"><hr /></div>
-
-_HTML_;
-      flushBuffers();
-    }
-  }
-
-  print html_footer();
   flushBuffers();
 }
 
@@ -157,5 +147,13 @@ _HTML_;
  * 各ページから API を取得して出力
  */
 
-$data = data();
-view($data);
+ob_start();
+
+printHeader();
+
+for ($page = 1; $page <= MAX_PAGE; $page++) {
+  $data = data($page);
+  printBody($data);
+}
+
+printFooter();
