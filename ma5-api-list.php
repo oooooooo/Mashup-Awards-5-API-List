@@ -5,6 +5,9 @@
  * API リストを一覧にする
  * http://mashupaward.jp/
  *
+ * KNOWN BUGS
+ * - ob_* が効いてない＞＜
+ *
  * @since  2009-09-11
  * @author oooooooo
  */
@@ -126,6 +129,7 @@ function view($data) {
 <h3>{$match['title']}</h3>
 <span class="category">{$match['category']}</span>
 <p>{$match['guide']}</p>
+<div class="line"><hr /></div>
 
 _HTML_;
     }

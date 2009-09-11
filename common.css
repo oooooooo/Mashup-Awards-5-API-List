@@ -34,3 +34,11 @@ h3 a:hover {
 .category{
   color:#54c3f1;
 }
+
+hr {
+  display: none;
+}
+
+div.line {
+  border-bottom: solid 1px #FF6600;
+}
